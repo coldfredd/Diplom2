@@ -100,7 +100,7 @@ public class UserChangeDataTest extends AbstractTest{
     @After
     public void deleteUser() {
         String accessToken = userSteps.login(user).extract().body().path("accessToken");
-        if (accessToken != null && accessToken != " ") {
+        if (accessToken != null) {
             userSteps.deleteUser(accessToken);
         }
     }
