@@ -29,13 +29,13 @@ public class UserLoginTest extends AbstractTest{
         user.setPassword(faker.internet().password());
         user.setName(faker.name().firstName());
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-        createUser();
+        userSteps.createUser(user);
     }
     @Test
     @DisplayName("Check status code 200 of /api/auth/login")
     @Description("The test verifies that a successful request returns body success: true")
     public void loginUserTest(){
-        ValidatableResponse response = loginAsUser();
+        ValidatableResponse response = userSteps.login(user);
         verifyStatusCodeAndBodySuccess(response);
     }
     @Test
@@ -43,7 +43,7 @@ public class UserLoginTest extends AbstractTest{
     @Description("Check can't login user if enter password incorrectly")
     public void incorrectPasswordTest(){
         user.setPassword(faker.internet().password());
-        ValidatableResponse response = loginAsUser();
+        ValidatableResponse response = userSteps.login(user);
         checkStatusCodeAndMessageError(response);
     }
     @Test
@@ -51,17 +51,8 @@ public class UserLoginTest extends AbstractTest{
     @Description("Check can't login user if enter email incorrectly")
     public void incorrectEmailTest(){
         user.setEmail(faker.internet().emailAddress());
-        ValidatableResponse response = loginAsUser();
+        ValidatableResponse response = userSteps.login(user);
         checkStatusCodeAndMessageError(response);
-    }
-    @Step("Create a user")
-    public void createUser() {
-        userSteps.createUser(user);
-    }
-
-    @Step("Login as the user")
-    public ValidatableResponse loginAsUser() {
-        return userSteps.login(user);
     }
     @Step("Verify status code is 200 and success is true")
     public void verifyStatusCodeAndBodySuccess(ValidatableResponse response) {

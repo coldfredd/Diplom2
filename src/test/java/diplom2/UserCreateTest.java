@@ -37,19 +37,15 @@ public class UserCreateTest extends AbstractTest{
     @DisplayName("Check status code 200 of /api/auth/register")
     @Description("Check create unique user test for /api/auth/register endpoint. And body have success: true. Email and name match, accessToken and refreshToken not null")
     public void createUniqueUser() {
-        ValidatableResponse response = createUser();
+        ValidatableResponse response = userSteps.createUser(user);
         checkUserHaveOk(response);
     }
     @Test
     @Description("Create a user who is already exist")
     public void createUserAlreadyRegistered() {
-        createUser();
-        ValidatableResponse response = createUser();
+        userSteps.createUser(user);
+        ValidatableResponse response = userSteps.createUser(user);
         checkUserAlreadyExists(response);
-    }
-    @Step("Create a user")
-    public ValidatableResponse createUser() {
-        return userSteps.createUser(user);
     }
     @Step("Check status code 200 and body have Ok")
     public void checkUserHaveOk(ValidatableResponse response) {

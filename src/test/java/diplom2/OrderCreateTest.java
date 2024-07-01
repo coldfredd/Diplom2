@@ -44,58 +44,39 @@ public class OrderCreateTest extends AbstractTest{
     @DisplayName("Check status code 200 of /api/orders")
     @Description("Create order with Login and Ingredients")
     public void createOrderWithLoginTest(){
-        accessToken = createUser().extract().path("accessToken");
-        List<String> ids = getAllIngredients();
+        accessToken = userSteps.createUser(user).extract().path("accessToken");
+        List<String> ids = ingredientSteps.getAllIngredients();
         Collections.shuffle(ids);
         Map<String,List<String>> ingredients = Map.of("ingredients",List.of( ids.get(0),ids.get(1)));
-        ValidatableResponse response = createOrderWithAuthorization(ingredients);
+        ValidatableResponse response = orderSteps.createOrderWithAuthorization(ingredients,accessToken);
         checkOrderCreate(response);
     }
-
-
-
     @Test
     @DisplayName("Check status code 200 of /api/orders")
     @Description("Create order with Ingredients and without Login")
     public void createOrderWithoutLoginTest(){
-        List<String> ids = getAllIngredients();
+        List<String> ids = ingredientSteps.getAllIngredients();
         Collections.shuffle(ids);
         Map<String,List<String>> ingredients = Map.of("ingredients",List.of( ids.get(0),ids.get(1)));
-        ValidatableResponse response = createOrderWithoutAuthorization(ingredients);
+        ValidatableResponse response = orderSteps.createOrderWithoutAuthorization(ingredients);
         checkOrderCreate(response);
     }
-
     @Test
     @DisplayName("Check status code 400 of /api/orders")
     @Description("Create order without Ingredients and Login")
     public void createOrderWithoutIngredientsLoginTest(){
-        ValidatableResponse response = createOrderWithoutIngredients();
+        ValidatableResponse response = orderSteps.createOrderWithoutIngredients();
         checkOrderFailWithoutIngredients(response);
     }
-
-
     @Test
     @DisplayName("Check status code 500 of /api/orders")
     @Description("Create order when hash incorrect")
     public void createOrderInvalidHashIngredientTest(){
-        List<String> ids = getAllIngredients();
+        List<String> ids = ingredientSteps.getAllIngredients();
         Collections.shuffle(ids);
         Map<String,List<String>> ingredients = Map.of("ingredients",List.of( (ids.get(0)+"123"),(ids.get(1))+"123"));
-        ValidatableResponse response = createOrderWithoutAuthorization(ingredients);
+        ValidatableResponse response = orderSteps.createOrderWithoutAuthorization(ingredients);
         checkErrorStatus(response);
-    }
-
-    @Step("Create a user")
-    public ValidatableResponse createUser() {
-        return userSteps.createUser(user);
-    }
-    @Step("Get all Ingredients")
-    private List<String> getAllIngredients() {
-        return ingredientSteps.getAllIngredients();
-    }
-    @Step("create order with authorization")
-    private ValidatableResponse createOrderWithAuthorization(Map<String, List<String>> ingredients) {
-        return orderSteps.createOrderWithAuthorization(ingredients,accessToken);
     }
     @Step("Check status code 200 and body success true")
     public void checkOrderCreate(ValidatableResponse response) {
@@ -114,15 +95,6 @@ public class OrderCreateTest extends AbstractTest{
         response
                 .statusCode(500);
     }
-    @Step("Create order without Authorization")
-    private ValidatableResponse createOrderWithoutAuthorization(Map<String, List<String>> ingredients) {
-        return orderSteps.createOrderWithoutAuthorization(ingredients);
-    }
-    @Step("Create Order without ingredients")
-    private ValidatableResponse createOrderWithoutIngredients() {
-        return orderSteps.createOrderWithoutIngredients();
-    }
-
     @After
     public void deleteUser() {
         String accessToken = userSteps.login(user).extract().body().path("accessToken");

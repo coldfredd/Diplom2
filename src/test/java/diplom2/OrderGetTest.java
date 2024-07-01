@@ -44,12 +44,12 @@ public class OrderGetTest extends AbstractTest {
     @DisplayName("Check status code 200 of GET /api/orders")
     @Description("Get order with Login, check status 200")
     public void getOrderWithLogin(){
-        accessToken = createUser().extract().path("accessToken");
-        List<String> ids = getIngredients();
+        accessToken = userSteps.createUser(user).extract().path("accessToken");
+        List<String> ids = ingredientSteps.getAllIngredients();
         Collections.shuffle(ids);
         Map<String,List<String>> ingredients = Map.of("ingredients",List.of( ids.get(0),ids.get(1)));
-        createOrderWithAuthorization(ingredients);
-        ValidatableResponse response = getOrdersUserWithAuthorization();
+        orderSteps.createOrderWithAuthorization(ingredients,accessToken);
+        ValidatableResponse response = orderSteps.getOrdersUserWithAuthorization(accessToken);
         checkUserOrder(response);
     }
 
@@ -57,12 +57,8 @@ public class OrderGetTest extends AbstractTest {
     @DisplayName("Check status code 401 of /api/orders")
     @Description("Create order without Login, check status 401")
     public void getOrderWithoutLogin(){
-        ValidatableResponse response = getOrderWithoutAuthorization();
+        ValidatableResponse response = orderSteps.getOrdersUserWithAuthorization(" ");
         checkErrorMessage(response);
-    }
-    @Step("get order without access token")
-    private ValidatableResponse getOrderWithoutAuthorization() {
-        return orderSteps.getOrdersUserWithAuthorization(" ");
     }
     @Step("Check status code 401 and message error")
     public void checkErrorMessage(ValidatableResponse response) {
@@ -75,22 +71,6 @@ public class OrderGetTest extends AbstractTest {
         response
                 .statusCode(200)
                 .body("success", equalTo(true));
-    }
-    @Step("get order with access token")
-    private ValidatableResponse getOrdersUserWithAuthorization() {
-        return orderSteps.getOrdersUserWithAuthorization(accessToken);
-    }
-    @Step("create order with authorization")
-    private void createOrderWithAuthorization(Map<String, List<String>> ingredients) {
-        orderSteps.createOrderWithAuthorization(ingredients,accessToken);
-    }
-    @Step("Create a user")
-    public ValidatableResponse createUser() {
-        return userSteps.createUser(user);
-    }
-    @Step("Get all ingredients")
-    private List<String> getIngredients() {
-        return ingredientSteps.getAllIngredients();
     }
     @After
     public void deleteUser() {

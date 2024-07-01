@@ -20,16 +20,13 @@ public class UserCreateParameterizedNegativeTest extends AbstractTest {
     private final String email;
     private final String password;
     private final String name;
-
     private final UserSteps userSteps = new UserSteps();
     private User user;
-
     public UserCreateParameterizedNegativeTest(String email,String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
     }
-
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
@@ -39,7 +36,6 @@ public class UserCreateParameterizedNegativeTest extends AbstractTest {
                 {null, null, null},
         });
     }
-
     @Before
     public void setUp() {
         user = new User();
@@ -51,12 +47,8 @@ public class UserCreateParameterizedNegativeTest extends AbstractTest {
     @DisplayName("Check status code 403 of /api/auth/register")
     @Description("Parameterized test for /api/auth/register endpoint. If none of the fields are requested, an error is returned")
     public void testCreatingUserWithoutRequiredFields() {
-        ValidatableResponse response = createUser();
+        ValidatableResponse response = userSteps.createUser(user);
         checkStatusCodeAndMessage(response);
-    }
-    @Step("Create a user")
-    public ValidatableResponse createUser() {
-        return userSteps.createUser(user);
     }
     @Step("Check status code 403 and body contains error message")
     public void checkStatusCodeAndMessage(ValidatableResponse response) {

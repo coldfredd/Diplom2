@@ -22,12 +22,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.2</version>
-                </plugin>
-                <plugin>
-                    <!-- настройка плагина maven-surefire-plugin -->
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
                     <configuration>
                         <testFailureIgnore>false</testFailureIgnore>
                         <argLine>
@@ -41,7 +35,6 @@
                         </properties>
                         <systemProperties>
                             <property>
-                                <!-- папка, в которую будут генерироваться отчёты Allure -->
                                 <name>allure.results.directory</name>
                                 <value>${project.build.directory}/allure-results</value>
                             </property>
@@ -55,7 +48,6 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <!-- подключение плагина allure-maven для вызова функций Allure с помощью Maven -->
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
                     <artifactId>allure-maven</artifactId>
@@ -74,11 +66,6 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.javafaker</groupId>
@@ -106,6 +93,11 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-rest-assured</artifactId>
             <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
