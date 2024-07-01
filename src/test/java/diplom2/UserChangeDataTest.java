@@ -54,7 +54,7 @@ public class UserChangeDataTest extends AbstractTest{
     @Description("Verify status code is 401 and body contains error message")
     public void changeUserNameWithoutAuthorizationTest(){
         user.setName(faker.name().firstName());
-        ValidatableResponse response = userSteps.changeUser(user, " ");;
+        ValidatableResponse response = userSteps.changeUser(user, " ");
         checkStatusCodeAndMessageError(response);
     }
     @Test
